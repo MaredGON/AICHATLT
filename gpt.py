@@ -4,7 +4,7 @@ from config import TOKEN, client, START_PROMT
 async def request_for_response(promt: str) -> str:
     """
     Отправляет запрос к API OpenAI и возвращает ответ.
-    
+
     :param promt: Текст запроса.
     :return: Ответ от API OpenAI.
     """

@@ -19,6 +19,7 @@ START_PROMT = f"Смотри, теперь ты AI ассистент в ком�
 client = AsyncOpenAI(
     api_key=GPT_TOKEN,
 )
+bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
 
@@ -47,6 +48,7 @@ async def command_start_handler(message: Message) -> None:
 @dp.message()
 async def echo_handler(message: Message) -> None:
     try:
+        await bot.send_chat_action(message.chat.id, action="typing")
         text = await request_for_response(message.text)
         await message.answer(text)
     except TypeError:

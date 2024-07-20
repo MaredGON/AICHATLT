@@ -8,6 +8,13 @@ from aiogram.types import Message
 from config import bot, dp
 from gpt import request_for_response
 
+async def rate_limit(user_id):
+    current_time = asyncio.get_event_loop().time()
+    last_message_time = user_message_times[user_id]
+    if current_time - last_message_time < TIME_LIMIT:
+        return False
+    user_message_times[user_id] = current_time
+    return True
 
 @dp.message(CommandStart())
 async def command_start_handler(message: Message) -> None:
@@ -22,15 +29,16 @@ async def command_start_handler(message: Message) -> None:
 
 @dp.message()
 async def echo_handler(message: Message) -> None:
-    """
-    Обработчик всех остальных сообщений.
-    """
+    print('сообщение получено')
     try:
         await bot.send_chat_action(message.chat.id, action="typing")
-        text = await request_for_response(message.text)
-        await message.answer(text)
+        text = await request_for_response(f'{message.text} Имя запросившего:{message.from_user.full_name}')
+        await message.reply(text)
     except TypeError:
         await message.answer("Nice try!")
+
+
+
 
 
 async def main() -> None:

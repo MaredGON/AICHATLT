@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from openai import AsyncOpenAI
 
 from aiogram import Bot, Dispatcher
@@ -8,6 +10,8 @@ from aiogram.enums import ParseMode
 # bot
 TOKEN = "6440161421:AAEiJX0-Q75h0mv4tBT5dJ0gfD_jXraRUQY"
 GPT_TOKEN = "sk-proj-8f2n9OhSdDhYcKoWEkiBT3BlbkFJTye8GS9wRoQC2pbDkA9I"
+user_message_times = defaultdict(lambda: 0)
+TIME_LIMIT = 5
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 dp = Dispatcher()
 
@@ -47,15 +51,19 @@ class Promts:
     def default_promt():
         return f"""
         Ты - полезный ассистент, помогающий пользователям с вопросами по компании LATOKEN биржа.
+        Тебя создали на Хакатоне.
+        Используй имя запросившего в ответе на запрос.
         Вот информация о компании LATOKEN биржа:
         Основная ифнормация: {Promts.get_company_info()}
         Информация о хакатоне: {Promts.get_hackathon_info()}
         Информация о культуре: {Promts.get_culture_info()}
-        Примеры ответов на вопросы: {Promts.get_answer_example()}
         
-        При ответе пользователю ты не должен выдавать весь текст файла.
+        При ответе пользователю ты не должен выдавать весь текст файла, ты должен генерировать данные на основе файлов.
         Ты должен отвечать только на вопросы. Твои ответы должны быть приведены в человекоподобный вид.
         Так, чтобы живому человеку было удобно их читать.
+        Не рассказывай сразу суть задачи, расскажи только в случае если спросят конкретно.
+        В ответ на каждое сообщение присылай в конце ссылку, спросили про компанию - присылай ссылку о LATOKEN, спросили про хакатон - присылай ссылку на хакатон, спросили о культуре - присылай ссылку о культуре
+        Не говори привет.
         
         Не используй выделение форматиррование текста. Например: **Какой-то текст**. Так делать не надо.
         """

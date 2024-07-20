@@ -16,6 +16,10 @@ async def request_for_response(user_message: str) -> str:
             {"role": "system", "content": Promts.user_message_promt(user_message)},
             {"role": "user", "content": user_message},
         ],
+        temperature=0.7,
+        top_p=0.9,
+        frequency_penalty=0.5,
+        presence_penalty=0.5,
         stream=True,
     )
     async for chunk in stream:

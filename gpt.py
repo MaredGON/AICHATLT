@@ -1,4 +1,4 @@
-from config import TOKEN, client, START_PROMT, Promts
+from config import client, Promts
 
 
 async def request_for_response(user_message: str) -> str:

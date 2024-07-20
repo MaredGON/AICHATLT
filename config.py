@@ -17,7 +17,6 @@ client = AsyncOpenAI(
 )
 
 
-
 class Promts:
     company_info = "./datainfo/datalatoken.txt"
     hackathon_info = "./datainfo/datahackathon.txt"
@@ -38,7 +37,7 @@ class Promts:
     def get_culture_info():
         with open(Promts.culture_info, "r", encoding="utf-8") as file:
             return file.read()
-        
+
     @staticmethod
     def get_answer_example():
         with open(Promts.answer_example, "r", encoding="utf-8") as file:

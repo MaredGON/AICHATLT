@@ -5,7 +5,7 @@ import sys
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 
-from config import START_PROMT, bot, dp
+from config import bot, dp
 from gpt import request_for_response
 
 
@@ -34,7 +34,6 @@ async def echo_handler(message: Message) -> None:
 
 
 async def main() -> None:
-    text = await request_for_response(START_PROMT)
     await dp.start_polling(bot)
 
 

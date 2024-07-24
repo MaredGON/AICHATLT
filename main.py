@@ -4,17 +4,26 @@ import sys
 
 from aiogram.filters import CommandStart
 from aiogram.types import Message
+from aiogram.enums.poll_type import PollType
 
-from config import bot, dp
-from gpt import request_for_response
+from config import bot, dp, TRIGGER_WORDS
+from gpt import request_for_response, request_for_response_quiz
 
-async def rate_limit(user_id):
-    current_time = asyncio.get_event_loop().time()
-    last_message_time = user_message_times[user_id]
-    if current_time - last_message_time < TIME_LIMIT:
-        return False
-    user_message_times[user_id] = current_time
-    return True
+async def cmd_quiz(message: Message, text):
+    try:
+        question, answers, nice_answer = await request_for_response_quiz(text)
+        print(answers)
+        nice_answer_id = int(nice_answer)
+        await bot.send_poll(
+            chat_id=message.chat.id,
+            question=question,
+            options=answers,
+            type=PollType.QUIZ,
+            correct_option_id=nice_answer
+        )
+    except:
+        ...
+
 
 @dp.message(CommandStart())
 async def command_start_handler(message: Message) -> None:
@@ -29,16 +38,12 @@ async def command_start_handler(message: Message) -> None:
 
 @dp.message()
 async def echo_handler(message: Message) -> None:
-    print('сообщение получено')
+    await bot.send_chat_action(message.chat.id, action="typing")
     try:
-        await bot.send_chat_action(message.chat.id, action="typing")
         text = await request_for_response(f'{message.text} Имя запросившего:{message.from_user.full_name}')
         await message.reply(text)
     except TypeError:
         await message.answer("Nice try!")
-
-
-
 
 
 async def main() -> None:
